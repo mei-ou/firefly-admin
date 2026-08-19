@@ -643,8 +643,9 @@ export class GitHubProvider implements GitProvider {
 
 	async #requestApi(path: string, init: RequestInit): Promise<Response> {
 		const url = new URL(path, GITHUB_API_ORIGIN);
+		const method = init.method ?? "GET";
 		try {
-			return await this.#fetch(url, {
+			const response = await this.#fetch(url, {
 				...init,
 				headers: {
 					Accept: "application/vnd.github+json",
@@ -653,7 +654,26 @@ export class GitHubProvider implements GitProvider {
 					"X-GitHub-Api-Version": GITHUB_API_VERSION,
 				},
 			});
+			if (!response.ok) {
+				// 只记录可定位上游故障所需的元数据；禁止记录 Token、正文和响应原文。
+				console.warn({
+					upstream: "github",
+					method,
+					path: url.pathname,
+					status: response.status,
+					rateLimitRemaining: response.headers.get("x-ratelimit-remaining"),
+					rateLimitReset: response.headers.get("x-ratelimit-reset"),
+					retryAfter: response.headers.get("retry-after"),
+				});
+			}
+			return response;
 		} catch {
+			console.warn({
+				upstream: "github",
+				method,
+				path: url.pathname,
+				failure: "network",
+			});
 			throw new ApiError(503, "UPSTREAM_UNAVAILABLE", "Git 服务暂时不可用。");
 		}
 	}
