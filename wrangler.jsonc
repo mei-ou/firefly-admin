@@ -33,7 +33,7 @@
 	"r2_buckets": [
 		{
 			"binding": "MEDIA_STAGING_BUCKET",
-			"bucket_name": "firefly-admin-media-staging",
+			"bucket_name": "firefly-admin-media-staging"
 		}
 	],
 	"d1_databases": [

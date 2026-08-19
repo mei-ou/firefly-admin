@@ -111,6 +111,15 @@ function containsControlCharacter(value: string): boolean {
 	});
 }
 
+function sanitizeDiagnosticMessage(value: string): string {
+	return Array.from(value, (character) => {
+		const codePoint = character.codePointAt(0);
+		return codePoint !== undefined && (codePoint <= 31 || codePoint === 127) ? " " : character;
+	})
+		.join("")
+		.slice(0, 200);
+}
+
 function parseRepositoryName(value: string, label: string): string {
 	if (
 		value.length === 0 ||
@@ -656,7 +665,7 @@ export class GitHubProvider implements GitProvider {
 			});
 			if (!response.ok) {
 				// 只记录可定位上游故障所需的元数据；禁止记录 Token、正文和响应原文。
-				console.warn({
+				console.error("github-upstream", {
 					upstream: "github",
 					method,
 					path: url.pathname,
@@ -667,12 +676,14 @@ export class GitHubProvider implements GitProvider {
 				});
 			}
 			return response;
-		} catch {
-			console.warn({
+		} catch (error) {
+			console.error("github-network", {
 				upstream: "github",
 				method,
 				path: url.pathname,
 				failure: "network",
+				errorName: error instanceof Error ? error.name : typeof error,
+				errorMessage: error instanceof Error ? sanitizeDiagnosticMessage(error.message) : "unknown",
 			});
 			throw new ApiError(503, "UPSTREAM_UNAVAILABLE", "Git 服务暂时不可用。");
 		}
