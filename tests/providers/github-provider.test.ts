@@ -38,6 +38,15 @@ function getFetchCall(fetchMock: ReturnType<typeof vi.fn>): [URL, RequestInit] {
 }
 
 describe("GitHubProvider 契约", () => {
+	it("调用 Fetch 时保留 Worker 全局 this 绑定", async () => {
+		const fetchMock = vi.fn<typeof fetch>(function (this: unknown) {
+			expect(this).toBe(globalThis);
+			return Promise.resolve(jsonResponse([]));
+		});
+
+		await expect(createProvider(fetchMock).listDirectory("src/content/posts")).resolves.toEqual([]);
+	});
+
 	it("读取文件并将 GitHub base64 内容归一化为 UTF-8", async () => {
 		const content = "# 你好，Firefly\n";
 		const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(

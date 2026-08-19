@@ -335,7 +335,7 @@ export class GitHubProvider implements GitProvider {
 			throw new TypeError("GitHub Token 配置无效。");
 		}
 		this.#authorization = `Bearer ${config.token}`;
-		this.#fetch = dependencies.fetch ?? fetch;
+		this.#fetch = (dependencies.fetch ?? globalThis.fetch).bind(globalThis);
 	}
 
 	async listDirectory(pathInput: string): Promise<GitDirectoryEntry[]> {
