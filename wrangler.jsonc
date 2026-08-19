@@ -1,0 +1,58 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "firefly-admin",
+	"compatibility_date": "2026-08-11",
+	"compatibility_flags": ["nodejs_compat"],
+	"main": "./src/worker.ts",
+	"triggers": {
+		"crons": ["17 3 * * *"]
+	},
+	"vars": {
+		"APP_VERSION": "0.1.0",
+		"APP_ENV": "production",
+		"ACCESS_TEAM_DOMAIN": "replace-me.cloudflareaccess.com",
+		"ACCESS_AUDIENCE": "replace-with-access-audience-tag",
+		"ADMIN_ORIGIN": "https://admin.example.com",
+		"ACCESS_ALLOWED_EMAILS": "admin@example.com",
+		"ACCESS_ALLOWED_SUBJECTS": "",
+		"GITHUB_OWNER": "replace-with-firefly-owner",
+		"GITHUB_REPO": "replace-with-firefly-repo",
+		"GITHUB_BRANCH": "master",
+		"GITHUB_CONTENT_ROOT": "src/content/posts",
+		"PUBLIC_ARTICLE_URL_TEMPLATE": "",
+		"PUBLIC_IMGBED_URL": "",
+		"FEATURE_ARTICLE_LINKS": "true",
+		"FEATURE_EXTERNAL_HTTPS_LINKS": "true",
+		"FEATURE_SMALL_IMAGE_UPLOAD": "true",
+		"FEATURE_COVER_MANAGEMENT": "true",
+		"FEATURE_ARTICLE_DELETE": "true",
+		"FEATURE_PDF_ATTACHMENT_UPLOAD": "false",
+		"FEATURE_ARTICLE_ASSET_DETAILS": "false",
+		"FEATURE_ARTICLE_ASSET_RENAME": "false"
+	},
+	"r2_buckets": [
+		{
+			"binding": "MEDIA_STAGING_BUCKET",
+			"bucket_name": "firefly-admin-media-staging",
+			"preview_bucket_name": "firefly-admin-media-staging-preview"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "IDEMPOTENCY_DB",
+			"database_name": "firefly-admin-idempotency",
+			"database_id": "replace-with-d1-database-id",
+			"migrations_dir": "migrations"
+		}
+	],
+	"ratelimits": [
+		{
+			"name": "RATE_LIMITER",
+			"namespace_id": "1001",
+			"simple": {
+				"limit": 60,
+				"period": 60
+			}
+		}
+	]
+}

@@ -1,0 +1,11 @@
+---
+import ArticleEditor from "../../components/articles/ArticleEditor.svelte";
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+guardModule("articles");
+---
+
+<AdminLayout title="新建文章" description="创建一篇新的 Firefly Markdown 文章。">
+	<ArticleEditor mode="create" capabilities={Astro.locals.capabilities} client:load />
+</AdminLayout>

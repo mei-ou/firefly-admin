@@ -1,0 +1,13 @@
+---
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+guardModule("media");
+---
+
+<AdminLayout title="媒体">
+	<section class="empty-state">
+		<p class="eyebrow">Media Module</p><h2>媒体 Provider 尚未连接</h2>
+		<p>P0 不读取图床 Secret；真实上传、格式校验与返回映射属于 P1。</p>
+	</section>
+</AdminLayout>

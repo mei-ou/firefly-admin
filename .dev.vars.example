@@ -1,0 +1,11 @@
+# 仅供本机 UI 预览。复制为 `.dev.vars` 后运行 `pnpm dev`。
+# 三项条件必须同时满足：APP_ENV=development、LOCAL_PREVIEW=true、HTTP loopback 请求。
+APP_ENV=development
+LOCAL_PREVIEW=true
+
+# 本地预览模式不会读取以下 Access/GitHub/D1/Rate Limiter 配置，也不会写入外部服务。
+# 正式部署必须继续通过 wrangler.jsonc / Cloudflare Secret 和 Binding 提供真实配置。
+
+# 图床外链 URL：左侧「媒体」菜单点击时新窗口打开此地址（前端可见，非 Secret）。
+# 必须是 https:// 开头；留空或不是 https 时菜单降级为灰态"图床未配置"。
+PUBLIC_IMGBED_URL=

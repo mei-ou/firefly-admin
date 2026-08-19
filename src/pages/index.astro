@@ -1,0 +1,26 @@
+---
+import StatusPanel from "../components/feedback/StatusPanel.svelte";
+import AdminLayout from "../layouts/AdminLayout.astro";
+import { getEnabledModules } from "../modules/registry";
+
+const enabledModules = getEnabledModules();
+---
+
+<AdminLayout title="安全概览">
+	<section class="page-heading">
+		<p class="eyebrow">P0 Security Shell</p>
+		<h2>后台能力已经在安全边界内就位。</h2>
+		<p>Cloudflare Access 负责入口保护，Worker 对每个受保护请求再次验证 JWT，并统一执行来源、响应头、错误与审计策略。</p>
+	</section>
+	<section class="metric-grid" aria-label="系统摘要">
+		<article class="metric-card"><span>已启用模块</span><strong>{enabledModules.length}</strong></article>
+		<article class="metric-card"><span>认证模式</span><strong>Access JWT</strong></article>
+		<article class="metric-card"><span>运行平台</span><strong>Workers</strong></article>
+	</section>
+	<section class="status-grid">
+		<StatusPanel title="身份边界" description="固定 RS256，校验 JWKS、kid、issuer、audience、exp 与主体白名单。" status="ready" />
+		<StatusPanel title="请求策略" description="写请求必须同源，并携带正确的 Fetch Metadata、Content-Type 和管理端标识。" status="ready" />
+		<StatusPanel title="文章管理" description="仅提供 P0 模块入口；编辑、GitHub 提交与冲突控制将在 P1 实现。" />
+		<StatusPanel title="媒体与部署" description="Provider 尚未接入真实上游，浏览器和构建产物均不包含服务 Secret。" />
+	</section>
+</AdminLayout>

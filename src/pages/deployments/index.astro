@@ -1,0 +1,13 @@
+---
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+guardModule("deployments");
+---
+
+<AdminLayout title="部署">
+	<section class="empty-state">
+		<p class="eyebrow">Deployments Module</p><h2>部署状态能力已预留</h2>
+		<p>P0 不访问 Cloudflare 管理 API，也不会读取对应 API Token。</p>
+	</section>
+</AdminLayout>

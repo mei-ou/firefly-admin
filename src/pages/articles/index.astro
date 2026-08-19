@@ -1,0 +1,14 @@
+---
+import ArticleList from "../../components/articles/ArticleList.svelte";
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+guardModule("articles");
+---
+
+<AdminLayout
+	title="文章"
+	description="搜索、浏览和管理 Firefly 内容仓库中的 Markdown 文章。"
+>
+	<ArticleList client:load />
+</AdminLayout>

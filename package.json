@@ -1,0 +1,53 @@
+{
+	"name": "firefly-admin",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@9.14.4",
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"scripts": {
+		"preinstall": "node -e \"if (!process.env.npm_config_user_agent?.startsWith('pnpm/')) { console.error('This project requires pnpm.'); process.exit(1); }\"",
+		"dev": "astro dev",
+		"check": "astro check",
+		"type-check": "tsc --noEmit",
+		"format": "biome format --write .",
+		"format:check": "biome format .",
+		"lint": "biome lint .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"build": "astro build && node scripts/check-milkdown-budget.mjs",
+		"check:milkdown-budget": "node scripts/check-milkdown-budget.mjs",
+		"preview": "astro preview",
+		"deploy": "pnpm build && wrangler deploy --config dist/server/wrangler.json"
+	},
+	"dependencies": {
+		"@astrojs/cloudflare": "14.2.0",
+		"@astrojs/svelte": "9.0.1",
+		"@codemirror/commands": "6.10.4",
+		"@codemirror/lang-markdown": "6.5.2",
+		"@codemirror/state": "6.7.1",
+		"@milkdown/kit": "7.22.1",
+		"@tailwindcss/vite": "4.3.3",
+		"astro": "7.2.0",
+		"codemirror": "6.0.2",
+		"dompurify": "3.4.13",
+		"github-slugger": "2.0.0",
+		"jose": "6.1.0",
+		"marked": "18.0.9",
+		"pinyin-pro": "3.28.2",
+		"svelte": "5.56.8",
+		"tailwindcss": "4.3.3",
+		"yaml": "2.9.0",
+		"zod": "4.1.12"
+	},
+	"devDependencies": {
+		"@astrojs/check": "0.9.10",
+		"@biomejs/biome": "2.5.8",
+		"@types/node": "24.10.0",
+		"typescript": "6.0.3",
+		"vitest": "4.1.10",
+		"wrangler": "4.120.1"
+	}
+}

@@ -1,0 +1,57 @@
+---
+import ModuleNavigation from "../components/navigation/ModuleNavigation.svelte";
+import { adminConfig } from "../config/adminConfig";
+import { getEnabledModules } from "../modules/registry";
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+const modules = getEnabledModules();
+const localPreview = Astro.locals.principal?.sub === "local-preview-user";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description ?? adminConfig.description} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title} · {adminConfig.name}</title>
+	</head>
+	<body>
+		<div class="admin-shell">
+			<aside class="sidebar">
+				<a class="brand" href="/" aria-label="Firefly Admin 首页">
+					<span class="brand-mark" aria-hidden="true">F</span>
+					<span>
+						<strong>Firefly</strong>
+						<small>Admin Console</small>
+					</span>
+				</a>
+				<ModuleNavigation modules={modules} currentPath={Astro.url.pathname} />
+				<div class:list={["security-badge", { "local-preview": localPreview }]}>
+					<span aria-hidden="true"></span>
+					<div>
+						<strong>{localPreview ? "Local preview" : "Access protected"}</strong>
+						<small>{localPreview ? "仅内存示例数据，不访问上游" : "Worker 二次验证"}</small>
+					</div>
+				</div>
+			</aside>
+			<div class="workspace">
+				<header class="topbar">
+					<div>
+						<p class="eyebrow">Firefly 管理后台</p>
+						<h1>{title}</h1>
+					</div>
+					<div class="environment"><span></span>{localPreview ? "本地预览 · 无外部写入" : "Cloudflare Worker"}</div>
+				</header>
+				<main><slot /></main>
+			</div>
+		</div>
+	</body>
+</html>

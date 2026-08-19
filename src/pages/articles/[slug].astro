@@ -1,0 +1,18 @@
+---
+import ArticleEditor from "../../components/articles/ArticleEditor.svelte";
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import { parseSlug } from "../../utils/slug-utils";
+
+guardModule("articles");
+const storageSlug = parseSlug(Astro.params.slug);
+---
+
+<AdminLayout title="编辑文章" description="安全读取并更新 Firefly Markdown 文章。">
+	<ArticleEditor
+		mode="edit"
+		storageSlug={storageSlug}
+		capabilities={Astro.locals.capabilities}
+		client:load
+	/>
+</AdminLayout>

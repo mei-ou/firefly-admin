@@ -1,0 +1,49 @@
+# 依赖
+node_modules/
+
+# Astro 构建产物与缓存
+dist/
+.astro/
+# Astro 相关临时 / 验证目录（如 .astro-build-article-delete-v1）
+.astro-*/
+
+# Wrangler（Cloudflare）本地状态
+.wrangler/
+
+# 各类临时 dist 验证目录
+# 形如 dist-e0-validation（dist- 前缀）
+dist-*/
+# 形如 dist.previous-20260816-1854（dist. 前缀）
+dist.*/
+
+# 通用临时目录（如 .tmp-r2-review-built-dry-run）
+.tmp-*/
+
+# pnpm 安装被网络或安全保护中断时可能留下临时目录，不应进入版本库。
+_tmp_*
+
+# 测试覆盖率报告
+coverage/
+
+# TypeScript 增量构建信息
+*.tsbuildinfo
+
+# 环境变量与密钥（真实文件永不入库，仅保留示例）
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# 日志
+*.log
+
+# 操作系统
+.DS_Store
+
+# 探索性原型 / 实验目录（如 .phase3-milkdown-spike）
+.phase3-*/
+
+# Wrangler 自动生成的类型定义（可由 `wrangler types` 重新生成；若 CI 需直接类型检查可去掉此行）
+worker-configuration.d.ts

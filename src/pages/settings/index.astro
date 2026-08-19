@@ -1,0 +1,10 @@
+---
+import { guardModule } from "../../core/config/feature-flags";
+import AdminLayout from "../../layouts/AdminLayout.astro";
+
+guardModule("settings");
+---
+
+<AdminLayout title="设置">
+	<section class="empty-state"><p class="eyebrow">Settings</p><h2>设置模块</h2></section>
+</AdminLayout>
