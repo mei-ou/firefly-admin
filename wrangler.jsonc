@@ -12,7 +12,7 @@
 		"APP_ENV": "production",
 		"ACCESS_TEAM_DOMAIN": "replace-me.cloudflareaccess.com",
 		"ACCESS_AUDIENCE": "replace-with-access-audience-tag",
-		"ADMIN_ORIGIN": "https://admin.example.com",
+		"ADMIN_ORIGIN": "admin@example.com",
 		"ACCESS_ALLOWED_EMAILS": "admin@example.com",
 		"ACCESS_ALLOWED_SUBJECTS": "",
 		"GITHUB_OWNER": "replace-with-firefly-owner",
@@ -34,14 +34,13 @@
 		{
 			"binding": "MEDIA_STAGING_BUCKET",
 			"bucket_name": "firefly-admin-media-staging",
-			"preview_bucket_name": "firefly-admin-media-staging-preview"
 		}
 	],
 	"d1_databases": [
 		{
 			"binding": "IDEMPOTENCY_DB",
 			"database_name": "firefly-admin-idempotency",
-			"database_id": "replace-with-d1-database-id",
+			"database_id": "ad6e7914-c61f-4a15-b6ab-9fc73c849e89",
 			"migrations_dir": "migrations"
 		}
 	],
