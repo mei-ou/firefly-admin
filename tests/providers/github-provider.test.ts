@@ -57,6 +57,12 @@ describe("GitHubProvider 契约", () => {
 				encoding: "base64",
 				content: Buffer.from(content, "utf8").toString("base64"),
 				size: Buffer.byteLength(content),
+				url: "https://api.github.com/repos/firefly-owner/firefly-blog/contents/hello-world/index.md",
+				html_url: "https://github.com/firefly-owner/firefly-blog/blob/master/hello-world/index.md",
+				git_url: "https://api.github.com/repos/firefly-owner/firefly-blog/git/blobs/a",
+				download_url:
+					"https://raw.githubusercontent.com/firefly-owner/firefly-blog/master/hello-world/index.md",
+				_links: {},
 			}),
 		);
 
@@ -75,6 +81,7 @@ describe("GitHubProvider 契约", () => {
 		);
 		expect(url.searchParams.get("ref")).toBe("master");
 		expect(init.method).toBe("GET");
+		expect(new Headers(init.headers).get("User-Agent")).toBe("firefly-admin");
 	});
 
 	it("读取 HEAD 时返回受信任的 Commit URL 和 Tree SHA", async () => {

@@ -24,16 +24,14 @@ const SAFE_GIT_REF = /^[A-Za-z0-9][A-Za-z0-9._/-]*$/;
 const SAFE_REPOSITORY_PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const GIT_OBJECT_SHA = /^[a-f0-9]{40,64}$/;
 
-const githubContentsFileSchema = z
-	.object({
-		type: z.literal("file"),
-		path: z.string().min(1).max(512),
-		sha: z.string().regex(GIT_OBJECT_SHA),
-		encoding: z.literal("base64"),
-		content: z.string(),
-		size: z.number().int().nonnegative().max(MAX_CONTENTS_API_FILE_BYTES),
-	})
-	.strict();
+const githubContentsFileSchema = z.looseObject({
+	type: z.literal("file"),
+	path: z.string().min(1).max(512),
+	sha: z.string().regex(GIT_OBJECT_SHA),
+	encoding: z.literal("base64"),
+	content: z.string(),
+	size: z.number().int().nonnegative().max(MAX_CONTENTS_API_FILE_BYTES),
+});
 
 const githubContentsMetadataSchema = z.looseObject({
 	type: z.literal("file"),
@@ -111,13 +109,18 @@ function containsControlCharacter(value: string): boolean {
 	});
 }
 
-function sanitizeDiagnosticMessage(value: string): string {
-	return Array.from(value, (character) => {
+function sanitizeDiagnosticMessage(value: string, sensitiveValues: readonly string[] = []): string {
+	const normalized = Array.from(value, (character) => {
 		const codePoint = character.codePointAt(0);
 		return codePoint !== undefined && (codePoint <= 31 || codePoint === 127) ? " " : character;
 	})
 		.join("")
 		.slice(0, 200);
+	return sensitiveValues.reduce(
+		(message, sensitiveValue) =>
+			sensitiveValue.length > 0 ? message.replaceAll(sensitiveValue, "[REDACTED]") : message,
+		normalized,
+	);
 }
 
 function parseRepositoryName(value: string, label: string): string {
@@ -660,6 +663,7 @@ export class GitHubProvider implements GitProvider {
 					Accept: "application/vnd.github+json",
 					Authorization: this.#authorization,
 					"Content-Type": "application/json",
+					"User-Agent": "firefly-admin",
 					"X-GitHub-Api-Version": GITHUB_API_VERSION,
 				},
 			});
@@ -683,7 +687,10 @@ export class GitHubProvider implements GitProvider {
 				path: url.pathname,
 				failure: "network",
 				errorName: error instanceof Error ? error.name : typeof error,
-				errorMessage: error instanceof Error ? sanitizeDiagnosticMessage(error.message) : "unknown",
+				errorMessage:
+					error instanceof Error
+						? sanitizeDiagnosticMessage(error.message, [this.#authorization])
+						: "unknown",
 			});
 			throw new ApiError(503, "UPSTREAM_UNAVAILABLE", "Git 服务暂时不可用。");
 		}
